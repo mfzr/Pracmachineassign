@@ -79,6 +79,7 @@ Model fitting is possibly the most important step in the model building sequence
 
 mold <- train(classe ~ ., data=insertbml, method="rf", trControl=shaping)
 ```
+```{r}
 ## 
 ## Call:
 ##  randomForest(x = x, y = y, mtry = param$mtry) 
@@ -95,14 +96,14 @@ mold <- train(classe ~ ., data=insertbml, method="rf", trControl=shaping)
 ## D    0    0    9 2242    1 0.0044404973
 ## E    0    0    0    7 2518 0.0027722772
 
-
-
+```
 ```{r}
 mold$finalModel
 
 futr <- predict(mold, newdata=insertdxc)
 confusionMatrix(insertdxc$classe, futr)
 ```
+```{r}
 ## Confusion Matrix and Statistics
 ## 
 ##           Reference
@@ -134,7 +135,7 @@ confusionMatrix(insertdxc$classe, futr)
 ## Detection Rate         0.2845   0.1927   0.1738   0.1635   0.1837
 ## Detection Prevalence   0.2845   0.1935   0.1743   0.1638   0.1839
 ## Balanced Accuracy      0.9991   0.9982   0.9982   0.9988   0.9999
-
+```
 
 
 remove near zero value and NA value for second time
@@ -177,5 +178,7 @@ Display Class Prediction Conclusion
 ```{r, echo=TRUE}
 futr
 ```
+```{r}
 ##  [1] "B" "A" "B" "A" "A" "E" "D" "B" "A" "A" "B" "C" "B" "A" "E" "E" "A"
 ## [18] "B" "B" "B"
+```
