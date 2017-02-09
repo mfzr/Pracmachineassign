@@ -75,15 +75,17 @@ shaping <- trainControl(method="cv", number=3, verboseIter=F)
 ##Model 
 Model fitting is possibly the most important step in the model building sequence. Validation of a model seems to consist of nothing more from  measures the fraction of the total variability in the response that is accounted for by the model. Unfortunately, a high value does not guarantee that the model fits the data well. Use of a model that does fit the data well is key good analysis
 
-```{r}
+```{r, echo=TRUE}
 
 mold <- train(classe ~ ., data=insertbml, method="rf", trControl=shaping)
+```
 
-
+```{r}
 mold$finalModel
 
 futr <- predict(mold, newdata=insertdxc)
-
+```
+```{r, echo=TRUE}
 confusionMatrix(insertdxc$classe, futr)
 ```
 
@@ -124,6 +126,6 @@ futr <- as.character(futr)
 ```
 
 Display Class Prediction Conclusion
-```{r}
+```{r, echo=TRUE}
 futr
 ```
