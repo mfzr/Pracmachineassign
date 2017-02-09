@@ -34,7 +34,7 @@ train <- read.csv("pml-training.csv")
 test <- read.csv("pml-testing.csv")
 ```
 
-#Creates two bootstrap samples
+##Creates two bootstrap samples
 ```{r}
 set.seed(10)
 inputmc <- createDataPartition(y=train$classe, p=0.7, list=F)
@@ -43,7 +43,7 @@ inputmc <- createDataPartition(y=train$classe, p=0.7, list=F)
 ##Data cleaning
 Data cleaning is outlier handling obviously influence the results of analyses. Data processing task is to verify that data values are correct at the very least, conform to  some a set of rules and correcting values against a known list of entities. Each source may contain invalid  data  and  the  data  in  the  sources  may  be  represented differently,overlap or contradict.The cleaned data should also replace data  in  the  original  sources  in  order  to  give  legacy  applications  the  improved  data  too  and  to avoid  redoing  the  cleaning  work  for  future  data  extractions.
 
-#Nearly zero variance
+###Nearly zero variance
 Data generating mechanism can create predictors that only have a single unique value 
 cause the model to crash or the fit to be unstable.  These value become zero-variance predictors when the data are split into cross-validation sub-samples or that a few samples may have an undue influence on the model.The frequency of the most prevalent value over the second most frequent value (called the "frequency ratio''), which would be near one for well-behaved predictors and very large for highly-unbalanced data.Percentage of unique values is divided by the total number of samples that approaches zero as the granularity of the data increases.
 
@@ -72,7 +72,7 @@ insertdxc <- insertdxc[, -(1:5)]
 shaping <- trainControl(method="cv", number=3, verboseIter=F)
 ```
 
-#Model 
+##Model 
 Model fitting is possibly the most important step in the model building sequence. Validation of a model seems to consist of nothing more from  measures the fraction of the total variability in the response that is accounted for by the model. Unfortunately, a high value does not guarantee that the model fits the data well. Use of a model that does fit the data well is key good analysis
 
 ```{r}
