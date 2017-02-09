@@ -1,0 +1,129 @@
+---
+title: "Practical Machine learning"
+output: html_document
+---
+
+INTRODUCTION
+
+Human  activity  recognition (HAR)is  surveillance systems and monitoring systems between  persons  and  electronic  devices. A number of applications for HAR, like elderly monitoring, life log systems for monitoring energy expenditure and for supporting weight-loss programs, and digital assistants for weight lifting exercises
+These device recognition of high-level activities, composed of multiple actions of persons wearing sensor motion  sensors  in  different  body  parts  such  as  the  waist,  wrist,  chest  and
+thighs achieving good classification performance. Data set for this assignment comes from devices such as Jawbone
+Up, Nike FuelBand, and Fitbit been used to collect a large amount of data about personal activity relatively inexpensively. Then predict "which" activity was performed at a specific point in time (like with the Daily Living Activities dataset above). Propose for the Weight Lifting Exercises dataset is to investigate "how (well)" an activity was performed by the wearer. The "how (well)" investigation has only received little attention so far, even though it potentially provides useful information for a large variety of applications,such as sports training.
+
+OBJECTTIVE  
+
+To predict the manner in which exercise was perform for data set.  
+create a report describing how prediction model was build
+Describe how cross validation been applied,
+Test prediction model with 20 different test cases.
+
+Operation code:
+
+working directory been set
+
+Load caret library
+```{r}
+library(caret)
+```
+
+load data set
+```{r}
+# set working directoty 
+#Load raw data set into variable
+train <- read.csv("pml-training.csv")
+test <- read.csv("pml-testing.csv")
+```
+
+##creates two bootstrap samples
+```{r}
+set.seed(10)
+inputmc <- createDataPartition(y=train$classe, p=0.7, list=F)
+```
+
+##Data cleaning
+Data cleaning is outlier handling obviously influence the results of analyses. Data processing task is to verify that data values are correct at the very least, conform to  some a set of rules and correcting values against a known list of entities. Each source may contain invalid  data  and  the  data  in  the  sources  may  be  represented differently,overlap or contradict.The cleaned data should also replace data  in  the  original  sources  in  order  to  give  legacy  applications  the  improved  data  too  and  to avoid  redoing  the  cleaning  work  for  future  data  extractions.
+
+##Nearly zero variance
+Data generating mechanism can create predictors that only have a single unique value 
+cause the model to crash or the fit to be unstable.  These value become zero-variance predictors when the data are split into cross-validation sub-samples or that a few samples may have an undue influence on the model.The frequency of the most prevalent value over the second most frequent value (called the "frequency ratio''), which would be near one for well-behaved predictors and very large for highly-unbalanced data.Percentage of unique values is divided by the total number of samples that approaches zero as the granularity of the data increases.
+
+```{r}
+insertbml <- train[inputmc, ]
+insertdxc <- train[-inputmc, ]
+
+zorying <- nearZeroVar(insertbml)
+insertbml <- insertbml[, -zorying]
+insertdxc <- insertdxc[, -zorying]
+```
+
+NA value and invalid values must be removed.
+
+```{r}
+# cleaning data set by removing NA value. 
+finding <- sapply(insertbml, function(x) mean(is.na(x))) > 0.95
+insertbml <- insertbml[, finding==F]
+insertdxc <- insertdxc[, finding==F]
+
+# removing invalid value
+insertbml <- insertbml[, -(1:5)]
+insertdxc <- insertdxc[, -(1:5)]
+
+
+shaping <- trainControl(method="cv", number=3, verboseIter=F)
+```
+
+#Model 
+Model fitting is possibly the most important step in the model building sequence. Validation of a model seems to consist of nothing more from  measures the fraction of the total variability in the response that is accounted for by the model. Unfortunately, a high value does not guarantee that the model fits the data well. Use of a model that does fit the data well is key good analysis
+
+```{r}
+
+mold <- train(classe ~ ., data=insertbml, method="rf", trControl=shaping)
+
+
+mold$finalModel
+
+futr <- predict(mold, newdata=insertdxc)
+
+confusionMatrix(insertdxc$classe, futr)
+```
+
+remove near zero value and NA value for second time
+```{r}
+zorying <- nearZeroVar(train)
+train <- train[, -zorying]
+test <- test[, -zorying]
+
+
+finding <- sapply(train, function(x) mean(is.na(x))) > 0.95
+train <- train[, finding==F]
+test <- test[, finding==F]
+
+
+train <- train[, -(1:5)]
+test <- test[, -(1:5)]
+
+```
+
+re fit clean data with test set into model
+```{r}
+shaping <- trainControl(method="cv", number=3, verboseIter=F)
+mold <- train(classe ~ ., data=train, method="rf", trControl=shaping)
+
+
+```
+
+Run prediction on test set
+```{r}
+futr <- predict(mold, newdata=test)
+
+
+futr <- as.character(futr)
+
+
+
+```
+
+Display Class Prediction Conclusion
+```{r}
+futr
+```
